@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class ExplicitAnimationScreen extends StatefulWidget {
@@ -12,8 +10,12 @@ class ExplicitAnimationScreen extends StatefulWidget {
 
 class _ExplicitAnimationScreenState extends State<ExplicitAnimationScreen>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController =
-      AnimationController(vsync: this, duration: const Duration(seconds: 10));
+  late final AnimationController _animationController = AnimationController(
+    vsync: this,
+    upperBound: 100,
+    lowerBound: 20,
+    duration: const Duration(seconds: 2),
+  )..addListener(() {});
 
   void _play() {
     _animationController.forward();
@@ -28,17 +30,6 @@ class _ExplicitAnimationScreenState extends State<ExplicitAnimationScreen>
   }
 
   @override
-  void initState() {
-    super.initState();
-    Timer.periodic(
-        const Duration(
-          milliseconds: 500,
-        ), (timer) {
-      print(_animationController.value);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -48,11 +39,19 @@ class _ExplicitAnimationScreenState extends State<ExplicitAnimationScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "${_animationController.value}",
-              style: const TextStyle(
-                fontSize: 50,
-              ),
+            AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius:
+                        BorderRadius.circular(_animationController.value),
+                  ),
+                );
+              },
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
