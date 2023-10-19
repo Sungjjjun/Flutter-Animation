@@ -10,12 +10,14 @@ class ExplicitAnimationScreen extends StatefulWidget {
 
 class _ExplicitAnimationScreenState extends State<ExplicitAnimationScreen>
     with SingleTickerProviderStateMixin {
+  late final Animation<Color?> _color = ColorTween(
+    begin: Colors.amber,
+    end: Colors.red,
+  ).animate(_animationController);
   late final AnimationController _animationController = AnimationController(
     vsync: this,
-    upperBound: 100,
-    lowerBound: 20,
     duration: const Duration(seconds: 2),
-  )..addListener(() {});
+  );
 
   void _play() {
     _animationController.forward();
@@ -40,15 +42,15 @@ class _ExplicitAnimationScreenState extends State<ExplicitAnimationScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedBuilder(
-              animation: _animationController,
+              animation: _color,
               builder: (context, child) {
                 return Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: _color.value,
                     borderRadius:
-                        BorderRadius.circular(_animationController.value),
+                        BorderRadius.circular(_animationController.value * 100),
                   ),
                 );
               },
